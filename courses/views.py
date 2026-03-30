@@ -2,10 +2,16 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import SessionAuthentication
 from .models import Course
 from .serializers import CourseSerializer
 
 class CourseListView(APIView):
+    def get_authenticators(self):
+        if self.request.method == 'GET':
+            return []
+        return super().get_authenticators()
+
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny()]
@@ -26,6 +32,7 @@ class CourseListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CourseDetailView(APIView):
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
