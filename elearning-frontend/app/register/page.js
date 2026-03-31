@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ username: '', email: '', password: '', role: 'student' });
+  const [form, setForm] = useState({ username: '', email: '', password: '', invite_code: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -86,15 +86,17 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-blue-100 text-sm mb-2 font-medium">Role</label>
-            <select
-              className="w-full bg-white/10 border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value })}
-            >
-              <option value="student" className="text-gray-900">Student</option>
-              <option value="instructor" className="text-gray-900">Instructor</option>
-            </select>
+            <label className="block text-blue-100 text-sm mb-2 font-medium">
+              Instructor Invite Code
+              <span className="text-blue-300 font-normal ml-1">(optional — leave blank if you are a student)</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Enter invite code if you are an instructor"
+              className="w-full bg-white/10 border border-white/20 text-white placeholder-blue-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              value={form.invite_code}
+              onChange={(e) => setForm({ ...form, invite_code: e.target.value })}
+            />
           </div>
 
           <button
