@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import SessionAuthentication
-from .models import Course
-from .serializers import CourseSerializer
+from .models import Course, Lesson
+from .serializers import CourseSerializer, LessonSerializer
 
 class CourseListView(APIView):
     def get_authenticators(self):
@@ -42,3 +42,18 @@ class CourseDetailView(APIView):
             return Response(serializer.data)
         except Course.DoesNotExist:
             return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+class LessonCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            course = Course.objects.get(pk=pk)
+        except Course.DoesNotExist:
+            return Response({'error': 'Course not found'}, status=status.HTTP_404_NOT_FOUND)
+        if request.user != course.instructor:
+            return Response({'error': 'Only the course instructor can add lessons'}, status=status.HTTP_403_FORBIDDEN)
+        serializer = LessonSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(course=course)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)        

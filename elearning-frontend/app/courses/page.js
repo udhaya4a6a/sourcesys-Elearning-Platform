@@ -64,6 +64,11 @@ export default function CoursesPage() {
             <button onClick={() => router.push('/dashboard')} className="text-blue-200 hover:text-white transition text-sm">
               Dashboard
             </button>
+            {user?.role === 'instructor' && (
+              <button onClick={() => router.push('/instructor')} className="text-blue-200 hover:text-white transition text-sm">
+                Instructor Panel
+              </button>
+            )}
             {user && <span className="text-blue-200 text-sm">Hi, {user.username}!</span>}
             <button
               onClick={handleLogout}
@@ -108,13 +113,21 @@ export default function CoursesPage() {
                 <p className="text-blue-300 text-xs mb-4">By {course.instructor}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-blue-300 text-xs">{course.lessons?.length || 0} lessons</span>
-                  <button
-                    onClick={() => handleEnroll(course.id)}
-                    disabled={enrolling === course.id}
-                    className="bg-blue-500 hover:bg-blue-400 disabled:bg-blue-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95"
-                  >
-                    {enrolling === course.id ? 'Enrolling...' : 'Enroll Now'}
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => router.push(`/courses/${course.id}`)}
+                      className="bg-white/20 hover:bg-white/30 text-white text-sm px-3 py-2 rounded-lg transition"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleEnroll(course.id)}
+                      disabled={enrolling === course.id}
+                      className="bg-blue-500 hover:bg-blue-400 disabled:bg-blue-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95"
+                    >
+                      {enrolling === course.id ? 'Enrolling...' : 'Enroll'}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
